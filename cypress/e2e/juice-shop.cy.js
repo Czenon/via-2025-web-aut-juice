@@ -123,7 +123,7 @@ describe("Juice-shop scenarios", () => {
       HomePage.closeProductInfo.click();
     })
 
-    it.only("Read a review", () => {
+    it("Read a review", () => {
       // Create scenario - Read a review
     // Click on search icon
     // Search for King
@@ -132,12 +132,13 @@ describe("Juice-shop scenarios", () => {
     // Validate review - K33p5 y0ur ju1cy 5plu773r 70 y0ur53lf!
 
       HomePage.searchIcon.click();
-      HomePage.searchField.click().type("King");
+      HomePage.searchField.click().type("King{enter}");
       HomePage.productBox.contains('OWASP Juice Shop "King of the Hill" Facemask').click();
       HomePage.reviewInfo.click();
       HomePage.reviewText.should("contain.text", "K33p5 y0ur ju1cy 5plu773r 70 y0ur53lf!");
     })
 
+    it.only("Add a review", () => {
     // Create scenario - Add a review
     // Click on search icon
     // Search for Raspberry
@@ -146,6 +147,16 @@ describe("Juice-shop scenarios", () => {
     // Click Submit
     // Click expand reviews button/icon (wait for reviews to appear)
     // Validate review -  "Tastes like metal"
+      HomePage.searchIcon.click();
+      HomePage.searchField.click().type("Raspberry{enter}");
+      HomePage.productBox.contains('Raspberry Juice (1000ml)').click();
+      HomePage.reviewField.click().type("Tastes like metal");
+      HomePage.submitReviewButton.click();
+      HomePage.reviewInfo.click();
+      HomePage.reviewText.should("contain.text", "Tastes like metal");
+      }
+    )
+
 
     // Create scenario - Validate product card amount
     // Validate that the default amount of cards is 12
