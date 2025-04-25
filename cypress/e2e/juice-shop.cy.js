@@ -1,4 +1,5 @@
 import { BasketPage } from "../pageObjects/BasketPage";
+import { CreateAddressPage } from "../pageObjects/CreateAddressPage";
 import { DeliveryMethodPage } from "../pageObjects/DeliveryMethodPage";
 import { HomePage } from "../pageObjects/HomePage";
 import { LoginPage } from "../pageObjects/LoginPage";
@@ -6,6 +7,7 @@ import { OrderCompletionPage } from "../pageObjects/OrderCompletionPage";
 import { OrderSummaryPage } from "../pageObjects/OrderSummaryPage";
 import { PaymentOptionsPage } from "../pageObjects/PaymentOptionsPage";
 import { RegistrationPage } from "../pageObjects/RegistrationPage";
+import { SavedAddressesPage } from "../pageObjects/SavedAddressesPage";
 import { SelectAddressPage } from "../pageObjects/SelectAddressPage";
 const randomNumber = Math.floor(Math.random() * 900000) + 100000;
 // const randomPass = Math.floor(Math.random() * 900000) + 100000;
@@ -202,7 +204,7 @@ describe("Juice-shop scenarios", () => {
 
     // Create page object - OrderCompletionPage
     // Validate confirmation - "Thank you for your purchase!"
-    it.only("Buy Girlie T-shirt", () => {
+    it("Buy Girlie T-shirt", () => {
       HomePage.searchIcon.click();
       HomePage.searchField.click().type("Girlie{enter}");
       HomePage.addToBasketButton.click();
@@ -224,11 +226,16 @@ describe("Juice-shop scenarios", () => {
       OrderCompletionPage.successMessage.should("have.text", "Thank you for your purchase!");
     })
 
-
-
-
-
+    it.only("Add address", () => {
     // Create scenario - Add address
+    const country = "Latvia";
+    const fullname = "Jānis Bērziņš";
+    const phoneno = "62447000";
+    const zipcode = "LV-2000";
+    const address = 'Jeru pagasts, "Kaķīši"';
+    const city = "Valmiera";
+    const state = "Valmieras novads";
+
     // Click on Account
     // Click on Orders & Payment
     // Click on My saved addresses
@@ -238,6 +245,26 @@ describe("Juice-shop scenarios", () => {
     // Fill in the necessary information
     // Click Submit button
     // Validate that previously added address is visible
+      HomePage.accountButton.click();
+      HomePage.ordersButton.click();
+      HomePage.savedAddressButton.click();
+
+      SavedAddressesPage.addNewAddressButton.click();
+
+      CreateAddressPage.countryField.click().type(`${country}`); //1
+      CreateAddressPage.nameField.click().type(`${fullname}`);   //2
+      CreateAddressPage.phoneField.click().type(`${phoneno}`);   //3
+      CreateAddressPage.zipCodeField.click().type(`${zipcode}`); //4
+      CreateAddressPage.addressField.click().type(`${address}`); //5
+      CreateAddressPage.cityField.click().type(`${city}`);       //6
+      CreateAddressPage.stateField.click().type(`${state}`);     //7
+      CreateAddressPage.submitButton.click();
+
+      SavedAddressesPage.addressRow.contains(`${fullname}`);   //2
+      SavedAddressesPage.addressRow.contains(`${address}, ${city}, ${state}, ${zipcode}`); //5 6 7 4
+      SavedAddressesPage.addressRow.contains(`${country}`);  //1
+    })
+    
 
     // Create scenario - Add payment option
     // Click on Account
