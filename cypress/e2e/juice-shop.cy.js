@@ -1,6 +1,12 @@
+import { BasketPage } from "../pageObjects/BasketPage";
+import { DeliveryMethodPage } from "../pageObjects/DeliveryMethodPage";
 import { HomePage } from "../pageObjects/HomePage";
 import { LoginPage } from "../pageObjects/LoginPage";
+import { OrderCompletionPage } from "../pageObjects/OrderCompletionPage";
+import { OrderSummaryPage } from "../pageObjects/OrderSummaryPage";
+import { PaymentOptionsPage } from "../pageObjects/PaymentOptionsPage";
 import { RegistrationPage } from "../pageObjects/RegistrationPage";
+import { SelectAddressPage } from "../pageObjects/SelectAddressPage";
 const randomNumber = Math.floor(Math.random() * 900000) + 100000;
 // const randomPass = Math.floor(Math.random() * 900000) + 100000;
 
@@ -157,7 +163,7 @@ describe("Juice-shop scenarios", () => {
       }
     )
 
-    it.only("Validate product card amount", () => {
+    it("Validate product card amount", () => {
     // Create scenario - Validate product card amount
     // Validate that the default amount of cards is 12
     // Change items per page (at the bottom of page) to 24
@@ -174,9 +180,6 @@ describe("Juice-shop scenarios", () => {
       HomePage.itemsPerPageBoxCurrentSelection.contains("36");
 
     })
-
-
-
 
     // Create scenario - Buy Girlie T-shirt
     // Click on search icon
@@ -196,8 +199,34 @@ describe("Juice-shop scenarios", () => {
     // Click Continue button
     // Create page object - OrderSummaryPage
     // Click on "Place your order and pay"
+
     // Create page object - OrderCompletionPage
     // Validate confirmation - "Thank you for your purchase!"
+    it.only("Buy Girlie T-shirt", () => {
+      HomePage.searchIcon.click();
+      HomePage.searchField.click().type("Girlie{enter}");
+      HomePage.addToBasketButton.click();
+      HomePage.shoppingCartButton.click();
+
+      BasketPage.checkoutButton.click();
+
+      SelectAddressPage.addressRow.contains("United Fakedom").click();
+      SelectAddressPage.continueButton.click();
+
+      DeliveryMethodPage.deliveryMethod.contains("Standard Delivery").click();
+      DeliveryMethodPage.continueButton.click();
+
+      PaymentOptionsPage.paymentCardRadioButton.click();
+      PaymentOptionsPage.continueButton.click();
+
+      OrderSummaryPage.checkoutButton.click();
+
+      OrderCompletionPage.successMessage.should("have.text", "Thank you for your purchase!");
+    })
+
+
+
+
 
     // Create scenario - Add address
     // Click on Account

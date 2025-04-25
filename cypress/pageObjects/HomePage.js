@@ -73,4 +73,14 @@ export class HomePage extends BasePage {
   static get itemsPerPageBoxCurrentSelection() {
     return cy.get("div mat-option[aria-selected='true']");
   }
+
+  static get addToBasketButton() {
+    return cy.get("[aria-label='Add to Basket'");
+  }
+
+  static get shoppingCartButton() {
+    return cy.get("[aria-label='Show the shopping cart']");
+  }
+
+  
 }
