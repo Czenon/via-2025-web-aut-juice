@@ -8,6 +8,7 @@ import { OrderSummaryPage } from "../pageObjects/OrderSummaryPage";
 import { PaymentOptionsPage } from "../pageObjects/PaymentOptionsPage";
 import { RegistrationPage } from "../pageObjects/RegistrationPage";
 import { SavedAddressesPage } from "../pageObjects/SavedAddressesPage";
+import { SavedPaymentMethodsPage } from "../pageObjects/SavedPaymentMethodsPage";
 import { SelectAddressPage } from "../pageObjects/SelectAddressPage";
 const randomNumber = Math.floor(Math.random() * 900000) + 100000;
 // const randomPass = Math.floor(Math.random() * 900000) + 100000;
@@ -226,7 +227,7 @@ describe("Juice-shop scenarios", () => {
       OrderCompletionPage.successMessage.should("have.text", "Thank you for your purchase!");
     })
 
-    it.only("Add address", () => {
+    it("Add address", () => {
     // Create scenario - Add address
     const country = "Latvia";
     const fullname = "Jānis Bērziņš";
@@ -265,7 +266,7 @@ describe("Juice-shop scenarios", () => {
       SavedAddressesPage.addressRow.contains(`${country}`);  //1
     })
     
-
+    it("Add payment option", () => {
     // Create scenario - Add payment option
     // Click on Account
     // Click on Orders & Payment
@@ -278,5 +279,19 @@ describe("Juice-shop scenarios", () => {
     // Set expiry year to 2090
     // Click Submit button
     // Validate that the card shows up in the list
+      HomePage.accountButton.click();
+      HomePage.ordersButton.click();
+      HomePage.paymentOptionsButton.click();
+
+      SavedPaymentMethodsPage.addNewCardMenu.click();
+      SavedPaymentMethodsPage.nameField.click().type("John Doe");
+      SavedPaymentMethodsPage.cardNumberField.click().type("1234567890123456");
+      SavedPaymentMethodsPage.expiryMonthField.select("5");
+      SavedPaymentMethodsPage.expiryYearField.select("2080");
+      SavedPaymentMethodsPage.submitButton.click();
+
+      SavedPaymentMethodsPage.savedPaymentMethodRow.contains("************3456");
+    })
+
   });
 });
