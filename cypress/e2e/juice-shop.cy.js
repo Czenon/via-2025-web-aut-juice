@@ -1,4 +1,8 @@
 import { HomePage } from "../pageObjects/HomePage";
+import { LoginPage } from "../pageObjects/LoginPage";
+import { RegistrationPage } from "../pageObjects/RegistrationPage";
+const randomNumber = Math.floor(Math.random() * 900000) + 100000;
+// const randomPass = Math.floor(Math.random() * 900000) + 100000;
 
 describe("Juice-shop scenarios", () => {
   context("Without auto login", () => {
@@ -9,6 +13,15 @@ describe("Juice-shop scenarios", () => {
     });
 
     it("Login", () => {
+      HomePage.accountButton.click();
+      HomePage.loginButton.click();
+
+      LoginPage.emailField.type("demo");
+      LoginPage.passwordField.type("demo");
+      LoginPage.loginButton.click();
+
+      HomePage.accountButton.click();
+      HomePage.userProfileButton.should("contain.text", "demo");
       // Click Account button
       // Click Login button
       // Set email value to "demo"
@@ -19,6 +32,21 @@ describe("Juice-shop scenarios", () => {
     });
 
     it("Registration", () => {
+      HomePage.accountButton.click();
+      HomePage.loginButton.click();
+      
+      LoginPage.notYetACustomerLink.click();
+      RegistrationPage.emailField.type(`email_${randomNumber}@inbox.com`);
+      RegistrationPage.passwordField.click().type(`password_${randomNumber}`)
+      RegistrationPage.repeatPasswordField.click().type(`password_${randomNumber}`);
+      RegistrationPage.securityQuestionField.click();
+      RegistrationPage.securityQuestionOptions.contains("Last name of dentist when you were a teenager? (Do not include 'Dr.')").click();
+      RegistrationPage.answerField.click().type("gordonas frymenas");
+      RegistrationPage.registrationButton.click();
+
+      LoginPage.emailField.click().type(`email_${randomNumber}@inbox.com`);
+      LoginPage.passwordField.click().type(`password_${randomNumber}`);
+      LoginPage.loginButton.click();
       // Click Account button
       // Login button
       // Click "Not yet a customer?"
@@ -45,18 +73,29 @@ describe("Juice-shop scenarios", () => {
     });
 
     it("Search and validate Lemon", () => {
+      HomePage.searchIcon.click();
+      HomePage.searchField.click().type("Lemon{enter}");
+      HomePage.productBox.contains("Lemon Juice (500ml)").click();
+      HomePage.productInfo.should("contain.text", "Sour but full of vitamins.");
       // Click on search icon
       // Search for Lemon
       // Select a product card - Lemon Juice (500ml)
       // Validate that the card (should) contains "Sour but full of vitamins."
     });
 
-    // Create scenario - Search 500ml and validate Lemon, while having multiple cards
-    // Click on search icon
-    // Search for 500ml
-    // Select a product card - Lemon Juice (500ml)
-    // Validate that the card (should) contains "Sour but full of vitamins."
+    it("Search 500ml and validate Lemon, while having multiple cards", () => {
+      // Create scenario - Search 500ml and validate Lemon, while having multiple cards
+      // Click on search icon
+      // Search for 500ml
+      // Select a product card - Lemon Juice (500ml)
+      // Validate that the card (should) contains "Sour but full of vitamins."
+      HomePage.searchIcon.click();
+      HomePage.searchField.click().type("500ml{enter}");
+      HomePage.productBox.contains("Lemon Juice (500ml)").click();
+      HomePage.productInfo.should("contain.text", "Sour but full of vitamins.");      
+    })
 
+    it("Search 500ml and validate cards", () => {
     // Create scenario - Search 500ml and validate cards
     // Click on search icon
     // Search for 500ml
@@ -69,12 +108,35 @@ describe("Juice-shop scenarios", () => {
     // Select a product card - Strawberry Juice (500ml)
     // Validate that the card (should) contains "Sweet & tasty!"
 
-    // Create scenario - Read a review
+      HomePage.searchIcon.click();
+      HomePage.searchField.click().type("500ml{enter}");
+      HomePage.productBox.contains("Eggfruit Juice (500ml)").click();
+      HomePage.productInfo.should("contain.text", "Now with even more exotic flavour.");
+      HomePage.closeProductInfo.click();
+
+      HomePage.productBox.contains("Lemon Juice (500ml)").click();
+      HomePage.productInfo.should("contain.text", "Sour but full of vitamins.");    
+      HomePage.closeProductInfo.click();
+
+      HomePage.productBox.contains("Strawberry Juice (500ml)").click();
+      HomePage.productInfo.should("contain.text", "Sweet & tasty!");    
+      HomePage.closeProductInfo.click();
+    })
+
+    it.only("Read a review", () => {
+      // Create scenario - Read a review
     // Click on search icon
     // Search for King
     // Select a product card - OWASP Juice Shop "King of the Hill" Facemask
     // Click expand reviews button/icon (wait for reviews to appear)
     // Validate review - K33p5 y0ur ju1cy 5plu773r 70 y0ur53lf!
+
+      HomePage.searchIcon.click();
+      HomePage.searchField.click().type("King");
+      HomePage.productBox.contains('OWASP Juice Shop "King of the Hill" Facemask').click();
+      HomePage.reviewInfo.click();
+      HomePage.reviewText.should("contain.text", "K33p5 y0ur ju1cy 5plu773r 70 y0ur53lf!");
+    })
 
     // Create scenario - Add a review
     // Click on search icon
